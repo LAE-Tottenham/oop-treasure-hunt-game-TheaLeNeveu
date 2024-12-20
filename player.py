@@ -6,7 +6,21 @@ class Player:
         self.bag = bag
         self.max_hp = 100
         self.hp = self.max_hp
+
+    def pick_up(self, item):
+        print(f"You have found a {item}")
+        if item.__class__.__name__ != "Bag":
+            self.bag.add(item)
+        else:
+            self.new_bag(item)
           
+    def new_bag(self, bag):
+       temp = self.bag.inventory
+       self.bag = bag
+       self.bag.inventory.append(temp)
+       print("You upgraded to a {self.bag.name} which can hold {self.max_capacity}!")
+       print("Don't worry. All your items from your old bag have been transferred to your new one.")
+
     def interact(self):
       pass
     
@@ -24,9 +38,14 @@ class Bag:
     def add(self, item):
       if self.check_full():
         self.inventory.append(item)
-        print(f"You put the {item} in {self.name}")
+        print(f"You put the {item.name} in {self.name}")
       else:
         print(f"{self.name} is full")
+
+    def remove(self, item):
+       for i in self.inventory:
+          if i.name == item:
+             self.inventory.remove(i)
 
     def check_full(self):
       if len(self.inventory) == self.max_capacity:
@@ -34,23 +53,9 @@ class Bag:
       else:
         return True
       
-    # def view_inventory(self):
-    #     if len(self.inventory) == 0:
-    #        print(f"There is nothing in {self.name}")
-    #     for i in self.inventory:
-    #        print(i)
-        # questions = [
-        #     {
-        #         "type": "list",
-        #         "choices": self.inventory,
-        #     }
-        # ]
-        # answers = prompt(questions)
-        # item = answers[0]
-        # return item
-        # question = {
-        #   "type": "list",
-        #   "choices": self.inventory
-        # }
-        # item = prompt(question)[0]
+    def view_inventory(self):
+        if len(self.inventory) == 0:
+           print(f"There is nothing in {self.name}")
+        for i in self.inventory:
+           print(i.name)
         

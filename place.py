@@ -30,50 +30,48 @@ maps = {
     ],
     "sandbox": [
         [".", "#", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-        [".", "#", "X", "#", "#", "#", "#", "#", "#", "#", "#", "."],
+        [".", "#", "?", "#", "#", "#", "#", "#", "#", "#", "#", "."],
         [".", "#", "#", "#", ".", ".", ".", "#", ".", ".", ".", "."],
         [".", "0", "#", "#", ".", "#", ".", "#", ".", "#", ".", "."],
-        [".", ".", ".", ".", ".", "#", ".", ".", ".", "#", ".", "X"]
+        [".", ".", ".", ".", ".", "#", ".", ".", ".", "#", ".", "."]
     ],
-    "maze": [
-        aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa   a
-        8   8               8               8           8                   8   8
-        8   8   aaaaaaaaa   8   aaaaa   aaaa8aaaa   aaaa8   aaaaa   aaaaa   8   8
-        8               8       8   8           8           8   8   8       8   8
-        8aaaaaaaa   a   8aaaaaaa8   8aaaaaaaa   8aaaa   a   8   8   8aaaaaaa8   8
-        8       8   8               8           8   8   8   8   8           8   8
-        8   a   8aaa8aaaaaaaa   a   8   aaaaaaaa8   8aaa8   8   8aaaaaaaa   8   8
-        8   8               8   8   8       8           8           8       8   8
-        8   8aaaaaaaaaaaa   8aaa8   8aaaa   8   aaaaa   8aaaaaaaa   8   aaaa8   8
-        8           8       8   8       8   8       8           8   8           8
-        8   aaaaa   8aaaa   8   8aaaa   8   8aaaaaaa8   a   a   8   8aaaaaaaaaaa8
-        8       8       8   8   8       8       8       8   8   8       8       8
-        8aaaaaaa8aaaa   8   8   8   aaaa8aaaa   8   aaaa8   8   8aaaa   8aaaa   8
-        8           8   8           8       8   8       8   8       8           8
-        8   aaaaa   8   8aaaaaaaa   8aaaa   8   8aaaa   8aaa8   aaaa8aaaaaaaa   8
-        8   8       8           8           8       8   8   8               8   8
-        8   8   aaaa8aaaa   a   8aaaa   aaaa8aaaa   8   8   8aaaaaaaaaaaa   8   8
-        8   8           8   8   8   8   8           8               8   8       8
-        8   8aaaaaaaa   8   8   8   8aaa8   8aaaaaaa8   aaaaaaaaa   8   8aaaaaaa8
-        8   8       8   8   8           8           8   8       8               8
-        8   8   aaaa8   8aaa8   aaaaa   8aaaaaaaa   8aaa8   a   8aaaaaaaa   a   8
-        8   8                   8           8               8               8   8
-        8   8aaaaaaaaaaaaaaaaaaa8aaaaaaaaaaa8aaaaaaaaaaaaaaa8aaaaaaaaaaaaaaa8aaa8
-    ],
+    "garden": [
+        ["#","#","#","#","#","#","#","#","#","#",".",".","#","#","#","#","#","#","#"],
+        ["#",".",".",".",".","?","#",".",".",".",".",".",".",".",".","#",".",".","#"],
+        ["#",".",".","#","#","#",".",".","#",".",".","#",".",".","#",".",".","#","#"],
+        ["#",".",".","#",".",".",".",".",".","#",".",".","#",".",".",".",".",".","#"],
+        ["#",".",".","#",".",".","#",".",".","#","#","#","#","#","#","#","#","#","#"],
+        ["#",".",".","#",".",".","#",".",".",".",".",".",".",".",".",".",".",".","#"],
+        ["#",".",".","#",".",".","#","#","#","#","#","#","#","#","#","#",".",".","#"],
+        ["#",".",".","#",".",".",".",".",".",".",".",".","#",".","?","#",".",".","#"],
+        ["#",".",".","#","#","#","#","#","#","#",".",".","#",".","#","#",".",".","#"],
+        ["#",".",".",".",".",".","#",".",".",".",".",".","#",".","#","#",".",".","#"],
+        ["#","#","#","#",".",".","#",".",".","#","#","#","#",".",".","#",".",".","#"],
+        ["#",".",".",".",".",".",".",".",".",".","#",".",".",".",".",".",".",".","#"],
+        ["#","0","#","#","#","#","#","#","#","#","#","#","#","#","#","#","#","#","#"]
+    ]
 }
     
 class Place:
-    def __init__(self, name, pos, items):
+    def __init__(self, name, pos, items, npcs):
         self.name = name
         self.pos = pos
         self.map = maps[name]
         self.height = len(self.map)
         self.width = len(self.map[0])
         self.items = items
+        self.npcs = npcs
 
         for i in range(len(self.map)):
             if "0" in self.map[i]:
                 self.door = Door([i, self.map[i].index("0")], True)
+
+        self.npc_pos = []
+        for i in range(len(self.map)):
+            if "?" in self.map[i]:
+                self.npc_pos.append([i, self.map[i].index("?")])
+        for j in range(len(self.npcs)):
+            self.npcs[j].pos = self.npc_pos[j]
 
         # self.weapons = ["sword", "bow and arrow", "spear", "shield", "axe"]
         # self.food = ["bread", "cheese", "fruit", "vegetable", "cake"]
@@ -108,8 +106,9 @@ class Door:
             return True
         
     def unlock(self, player):
-        if "key" in player.bag.inventory:
-            self.locked = False
-            print("The door is now unlocked.")
-        else:
-            print()
+        for i in player.bag.inventory:
+            if i.name == "key":
+                self.locked = False
+                player.bag.remove("key")
+                print("The door is now unlocked.")
+                break

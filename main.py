@@ -5,27 +5,24 @@ from item import *
 from InquirerPy import prompt
 import random
 
-# import keyboard
-
-# print("Press any key to continue...")
-# while True:
-#     if keyboard.is_pressed('q'):
-#         print('You pressed q!')
-#         break
-
 entity_mapper = {
     "0": "door",
     "#": "wall",
     "X": "chest",
-    "?": "interaction",
+    "?": "npc",
     "!": "enemy",
     ".": "nothing"
 }
 
+key = Item("key")
 bread = Food("bread", 100)
 
-playground = Place("playground", [0,0], ["key"])
-sandbox = Place("sandbox", [0,0], [])
+john = Riddle_NPC("John")
+sasha = Hangman_NPC("Sasha")
+
+playground = Place("playground", [0,0], [key], [john])
+sandbox = Place("sandbox", [0,0], [key], [john])
+garden = Place("garden", [10, 0], [key], [john, sasha])
 
 hand = Bag("hand", 1)
 basket = Bag("basket", 5)
@@ -33,15 +30,15 @@ backpack = Bag("backpack", 10)
 
 class Game():
     def __init__(self):
-        self.places = [playground, sandbox]
+        self.places = [playground, sandbox, garden]
         self.current_place = self.places[0]
 
     def setup(self):
         pass
 
     def start(self):
-        #name = input("Enter player name: ")
-        self.player = Player("name", hand)
+        name = input("Enter player name: ")
+        self.player = Player(name, hand)
         self.current_place = playground
 
     def print_map(self):
@@ -75,31 +72,43 @@ class Game():
             self.current_place.pos[1] -= 1
 
     def check_pos(self):
-        if (self.current_place.pos[1] < 0 or self.current_place.pos[1] > self.current_place.height) or (self.current_place.pos[0] < 0 or self.current_place.pos[0] > self.current_place.width):
+        if (self.current_place.pos[1] < 0 or self.current_place.pos[1] > self.current_place.height-1) or (self.current_place.pos[0] < 0 or self.current_place.pos[0] > self.current_place.width-1):
            return False
         
         current_pos = self.current_place.map[self.current_place.pos[1]][self.current_place.pos[0]]
-        if entity_mapper[current_pos] == "nothing":
-            pass
-        elif entity_mapper[current_pos] == "wall":
+
+        if entity_mapper[current_pos] == "wall":
             return False
+        
         elif entity_mapper[current_pos] == "door":
             if self.current_place.door.enter(self.player):
+                for i in self.current_place.npcs:
+                    i.completed = False
+                    i.attempted = False
                 self.current_place = self.places[self.places.index(self.current_place)+1]
+                print(f"You are now in {self.current_place.name}")
+
         elif entity_mapper[current_pos] == "chest":
             item = random.choice(self.current_place.items)
-            print(f"You have found a {item}")
-            self.player.bag.add(item)
+            self.player.pick_up(item)
+
+        elif entity_mapper[current_pos] == "npc":
+            i.interact(self.player, random.choice(self.current_place.items), 1)
+        else:
+           pass
+       
 
     def run(self):
         while True:
             self.print_map()
             key_press = input("")
+
             if key_press == "q":
                 break
+            elif key_press == "v":
+               self.player.bag.view_inventory()
             else:
                 self.move(key_press)
-
 
 game = Game()
 
