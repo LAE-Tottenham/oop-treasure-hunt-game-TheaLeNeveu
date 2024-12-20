@@ -23,7 +23,7 @@ def generate_map(height, width):
 maps = {
     "playground": [
         [".", ".", ".", "#", "#", "#", "#", "0", ".", ".", ".", "."],
-        [".", ".", ".", ".", ".", "#", "#", "#", "#", "#", ".", "."],
+        [".", "?", ".", ".", "?", "#", "#", "#", "#", "#", ".", "."],
         ["#", "#", "#", "#", ".", ".", ".", "#", "X", "#", ".", "."],
         [".", ".", ".", ".", ".", "#", "#", ".", ".", "#", ".", "."],
         [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."]
@@ -66,12 +66,15 @@ class Place:
             if "0" in self.map[i]:
                 self.door = Door([i, self.map[i].index("0")], True)
 
-        self.npc_pos = []
+        count = 0
         for i in range(len(self.map)):
-            if "?" in self.map[i]:
-                self.npc_pos.append([i, self.map[i].index("?")])
-        for j in range(len(self.npcs)):
-            self.npcs[j].pos = self.npc_pos[j]
+            for j in range(len(self.map[i])):
+                if self.map[i][j] == "?":
+                    self.npcs[count].pos = [i, j]
+                    count += 1
+        for i in self.npcs:
+            print(i.name, i.pos)
+
 
         # self.weapons = ["sword", "bow and arrow", "spear", "shield", "axe"]
         # self.food = ["bread", "cheese", "fruit", "vegetable", "cake"]

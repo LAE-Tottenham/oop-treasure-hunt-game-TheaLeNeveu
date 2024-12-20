@@ -20,7 +20,7 @@ bread = Food("bread", 100)
 john = Riddle_NPC("John")
 sasha = Hangman_NPC("Sasha")
 
-playground = Place("playground", [0,0], [key], [john])
+playground = Place("playground", [0,0], [key], [john, sasha])
 sandbox = Place("sandbox", [0,0], [key], [john])
 garden = Place("garden", [10, 0], [key], [john, sasha])
 
@@ -93,10 +93,14 @@ class Game():
             self.player.pick_up(item)
 
         elif entity_mapper[current_pos] == "npc":
-            i.interact(self.player, random.choice(self.current_place.items), 1)
+            print(self.current_place.pos, )
+            for i in self.current_place.npcs:
+                print(i.name, i.pos)
+                if i.pos == self.current_place.pos:
+                    print("interact")
+                    i.interact(self.player, random.choice(self.current_place.items), 1)
         else:
            pass
-       
 
     def run(self):
         while True:
