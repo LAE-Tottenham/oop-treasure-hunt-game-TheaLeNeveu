@@ -9,7 +9,7 @@ entity_mapper = {
     "0": "door",
     "#": "wall",
     "X": "chest",
-    "?": "npc",
+    "?": "friend",
     "!": "enemy",
     ".": "nothing"
 }
@@ -17,10 +17,12 @@ entity_mapper = {
 key = Item("key")
 bread = Food("bread", 100)
 
+olivia = Trivia_NPC("Olivia")
+fred = TicTacToe_NPC("Fred")
 john = Riddle_NPC("John")
 sasha = Hangman_NPC("Sasha")
 
-playground = Place("playground", [0,0], [key], [john, sasha])
+playground = Place("playground", [0,0], [key], [fred])
 sandbox = Place("sandbox", [0,0], [key], [john])
 garden = Place("garden", [10, 0], [key], [john, sasha])
 
@@ -33,13 +35,13 @@ class Game():
         self.places = [playground, sandbox, garden]
         self.current_place = self.places[0]
 
-    def setup(self):
-        pass
-
     def start(self):
-        name = input("Enter player name: ")
-        self.player = Player(name, hand)
+        #name = input("Enter player name: ")
+        self.player = Player("s", hand)
         self.current_place = playground
+        self.current_place.set_details()
+
+        print("You can move using the keys w, a, s, d. You can intect with things by mving to the same position as it.")
 
     def print_map(self):
         for i in range(self.current_place.height):
@@ -86,19 +88,17 @@ class Game():
                     i.completed = False
                     i.attempted = False
                 self.current_place = self.places[self.places.index(self.current_place)+1]
+                self.current_place.set_details()
                 print(f"You are now in {self.current_place.name}")
 
         elif entity_mapper[current_pos] == "chest":
             item = random.choice(self.current_place.items)
             self.player.pick_up(item)
 
-        elif entity_mapper[current_pos] == "npc":
-            print(self.current_place.pos, )
+        elif entity_mapper[current_pos] == "friend":
             for i in self.current_place.npcs:
-                print(i.name, i.pos)
                 if i.pos == self.current_place.pos:
-                    print("interact")
-                    i.interact(self.player, random.choice(self.current_place.items), 1)
+                    i.interact(self.player, random.choice(self.current_place.items))
         else:
            pass
 

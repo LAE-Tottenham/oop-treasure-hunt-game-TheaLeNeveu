@@ -23,7 +23,7 @@ def generate_map(height, width):
 maps = {
     "playground": [
         [".", ".", ".", "#", "#", "#", "#", "0", ".", ".", ".", "."],
-        [".", "?", ".", ".", "?", "#", "#", "#", "#", "#", ".", "."],
+        ["?", ".", ".", ".", ".", "#", "#", "#", "#", "#", ".", "."],
         ["#", "#", "#", "#", ".", ".", ".", "#", "X", "#", ".", "."],
         [".", ".", ".", ".", ".", "#", "#", ".", ".", "#", ".", "."],
         [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."]
@@ -61,19 +61,15 @@ class Place:
         self.width = len(self.map[0])
         self.items = items
         self.npcs = npcs
+        self.door = Door(True)
 
-        for i in range(len(self.map)):
-            if "0" in self.map[i]:
-                self.door = Door([i, self.map[i].index("0")], True)
-
+    def set_details(self):
         count = 0
         for i in range(len(self.map)):
             for j in range(len(self.map[i])):
                 if self.map[i][j] == "?":
-                    self.npcs[count].pos = [i, j]
+                    self.npcs[count].pos = [j, i]
                     count += 1
-        for i in self.npcs:
-            print(i.name, i.pos)
 
 
         # self.weapons = ["sword", "bow and arrow", "spear", "shield", "axe"]
@@ -96,8 +92,7 @@ class Place:
 #         self.map = generate_map(self.height, self.width)
 
 class Door:
-    def __init__(self, location, locked):
-        self.location = location
+    def __init__(self, locked):
         self.locked = locked
 
     def enter(self, player):

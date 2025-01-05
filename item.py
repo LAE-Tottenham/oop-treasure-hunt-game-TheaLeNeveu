@@ -13,162 +13,260 @@ class Food(Item):
 class NPC:
   def __init__(self, name):
     self.name = name
-    self.attempted = False
-    self.completed = False
+    self.difficulty = 1
     self.friendship = 0
     self.met = False
-    self.pos = [0,0]
+    self.attempted = False
+    self.completed = False
 
-  def ineract(self, player, item, difficulty):
+  def interact(self, player, item):
+    if self.met == False:
+      print("Hi! Who are you?")
+      print(f"Your name is {player.name}? I'm {self.name}. Nice to meet you.")
+      self.met = True
+
+    else:
+      print(f"Hello {player.name}! It's me {self.name}")
+
     if self.completed:
       print("Sorry I don't have anything else on me right now. We'll play another time.")
 
-    elif self.attempted:
-      questions = [
-        {
-          "type": "confirm",
-          "message": "Are you ready to try again?"
-        },
-      ]
-      answers = prompt(questions)
-      confirm = answers[0]
-      
-
     else:
-      if self.met == False:
-        print("Hi! Who are you?")
-        print(f"Your name is {player.name}. I'm {self.name}. Nice to meet you.")
-        self.met = True
+      if self.attempted == False:
+        print(f"Guess what. I found this {item.name} lying around! I'll give you it if you play a game with me.")
+        questions = [
+          {
+            "type": "confirm",
+            "message": "Would you like to play?"
+          },
+        ]
+        answers = prompt(questions)
+        confirm = answers[0]
 
       else:
-        print(f"Hello {player.name}! It's me {self.name}")
-
-      print(f"Guess what. I found this {item.name} lying around! I'll give you it if you play a game with me.")
-      questions = [
-        {
-          "type": "confirm",
-          "message": "Would you like to play?"
-        },
-      ]
-      answers = prompt(questions)
-      confirm = answers[0]
+        questions = [
+          {
+            "type": "confirm",
+            "message": "Are you ready to try again?"
+          },
+        ]
+        answers = prompt(questions)
+        confirm = answers[0]   
 
       if confirm:
         print("Amazing!")
         self.attempted = True
-        if self.task(difficulty):
+        if self.task():
           print("Congratulations, you won!")
-          print("As promised, here is the {item.name}")
+          print(f"As promised, here is the {item.name}")
+          player.pick_up(item)
           print("Thanks for playing with me!")
           self.friendship += 10
           print(f"{self.name} gained 10 friendship points.")
           self.completed = True
+          self.difficulty += 1
+        else:
+          print("Thats a shame. Come back when you want to have another go.")
       else:
         print("Thats fine. Come back if you change your mind.")
 
+class Trivia_NPC(NPC):
+  def task(self):
+    questions = [
+      [
+        {
+          "type": "list",
+          "message": "What does the symbol 0 correspond to?",
+          "choices": ["door", "wall", "chest", "nothing"],
+        },
+        {
+          "type": "list",
+          "message": "What does the symbol # correspond to?",
+          "choices": ["chest", "nothing", "enemy", "wall"],
+        },
+        {
+          "type": "list",
+          "message": "What does the symbol X correspond to?",
+          "choices": ["nothing", "enemy", "chest", "friend"],
+        },
+        {
+          "type": "list",
+          "message": "What does the symbol ? correspond to?",
+          "choices": ["nothing", "wall", "friend", "door"],
+        },
+        {
+          "type": "list",
+          "message": "What does the symbol ! correspond to?",
+          "choices": ["wall", "enemy", "door", "nothing"],
+        },
+        {
+          "type": "list",
+          "message": "What does the symbol . correspond to?",
+          "choices": ["chest", "wall", "friend", "nothing"],
+        },
+      ],
+    ]
+
+    answers = [
+      ["door", "wall", "chest", "friend", "enemy", "nothing"],
+    ]
+
+    quiz = questions[self.difficulty-1]
+    results = prompt(quiz)
+
+    score = 0
+    for i in range(len(quiz)):
+      if results[i] == answers[self.difficulty-1][i]:
+        score += 1
+
+    print(f"You got {score}/{len(quiz)}!")
+    if score == len(quiz):
+      return True
+    else:
+      print("Sorry but you need to answer all questions correctly to win.")
+      return False
+
 class TicTacToe_NPC(NPC):
   def task(self):
-    pass
+    possible_moves = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    game_board = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+
+    def print_game_board():
+      for i in range(3):
+        print("\n+---+---+---+")
+        print("|", end="")
+        for j in range(3):
+          print("", game_board[i][j], end=" |")
+      print("\n+---+---+---+")
+
+    def place_tile(move, symbol):
+      for i in range(3):
+        for j in range(3):
+          if game_board[i][j] == move:
+            game_board[i][j] = symbol
+            possible_moves.remove(move)
+            break
+      
+
+    print("Each go you input the position you would like to place your tile. The positions are the spaces on the board labled 1-9.")
+    print("The first to get three tiles in a row, column or diagonally wins.")
+    print("I will use X tiles and you will use O tiles. You go first.")
+    while True:
+      print_game_board()
+
+      run = True
+      while run:
+        move = input("")
+        if move.isdigit() == False or len(move) == 1:
+          print("That is not a valid move. Make sure that your input is a number 1-9.")
+        elif int(move) in possible_moves:
+          place_tile(move, "O")
+        else:
+          print("That place is already occupied.")
+      move = random.choice(possible_moves)
+      place_tile(move, "X")
 
 class HideAndSeek_NPC(NPC):
   def task(self, hidden_item):
     print(f"I've hidden a {hidden_item.name} somewhere around here. Find it and bring it back to me.")
 
 class Riddle_NPC(NPC):
-  def task(self, difficulty):
+  def task(self):
+    print("If you want to give up, type q.")
     riddles = [
       ["What has a head and a tail but no body?", "coin"],
       ["You walk into a room that contains a kerosene lamp, a candle and a fireplace. What would you light first?", "match"],
       ["Where does today come before yesterday?", "dictionary"],
       ["What has one eye, but can’t see?", "needle"] 
     ]
-    riddle = riddles[difficulty - 1][0]
-    ans = riddles[difficulty - 1][1]
+    riddle = riddles[self.difficulty - 1][0]
+    ans = riddles[self.difficulty - 1][1]
     correct = False
     while correct == False:
       guess = input(riddle)
       for i in guess.split():
         if guess.lower() == ans:
           return True
-      else:
-        print("That's not right. (It might be useful to rember that the answer is only one word)")
-        questions = [
-          {
-            "type": "confirm",
-            "message": "Would you like to give up?"
-          },
-        ]
-        answers = prompt(questions)
-        confirm = answers[0]
-        if confirm:
+        elif guess.lower() == "q":
           return False
+        else:
+          print("That's not right.")
 
 class Hangman_NPC(NPC):
-   def task(self, difficulty):
+   def task(self):
       drawings = {
         1: "========== \n",
-        2: """ |
-               |
-               |
-               |
-               |
-              ==========""",
-        3: """+----+
-              |
-              |
-              |
-              |
-              |
-              ==========""",
-        4: """+----+
-              |    |
-              |
-              |
-              |
-              |
-              ==========""",
-        5: """+----+
-              |    |
-              |    O
-              |
-              |
-              |
-              ==========""",
-        6: """+----+
-              |    |
-              |    O
-              |    |
-              |
-              |
-              ==========""",
-        7: """+----+
-              |    |
-              |    O
-              |   /|
-              |
-              |
-              ==========""",
-        8: """+----+
-              |    |
-              |    O
-              |   /|\
-              |
-              |
-              ==========""",
-        9: """+----+
-              |    |
-              |    O
-              |   /|\
-              |   /
-              |
-              ==========""",
-        10: """+----+
-              |    |
-              |    O
-              |   /|\
-              |   / \
-              |
-              ==========""",
+        2: """
+        |
+        |
+        |
+        |
+        |
+        ==========""",
+        3: """
+        +----+
+        |
+        |
+        |
+        |
+        |
+        ==========""",
+        4: """
+        +----+
+        |    |
+        |
+        |
+        |
+        |
+        ==========""",
+        5: """
+        +----+
+        |    |
+        |    O
+        |
+        |
+        |
+        ==========""",
+        6: """
+        +----+
+        |    |
+        |    O
+        |    |
+        |
+        |
+        ==========""",
+        7: """
+        +----+
+        |    |
+        |    O
+        |   /|
+        |
+        |
+        ==========""",
+        8: """
+        +----+
+        |    |
+        |    O
+        |   /|\
+        |
+        |
+        ==========""",
+        9: """
+        +----+
+        |    |
+        |    O
+        |   /|\
+        |   /
+        |
+        ==========""",
+        10: """
+        +----+
+        |    |
+        |    O
+        |   /|\
+        |   / \
+        |
+        ==========""",
       }
 
       attempts = 0
@@ -194,13 +292,13 @@ class Hangman_NPC(NPC):
         print("There aren't really any rules, but you should to guess the letters one by one.")
         print("If you think you know what the word is, you can guess the whole word at once.")
 
-      if difficulty == 1:
+      if self.difficulty == 1:
         word = random.choice(easy_word_options)
-      elif difficulty == 2:
+      elif self.difficulty == 2:
         word = random.choice(medium_word_options)
-      elif difficulty == 3:
+      elif self.difficulty == 3:
         word = random.choice(hard_word_options)
-      elif difficulty == 4:
+      elif self.difficulty == 4:
         word = random.choice(superhard_word_options)
 
       while attempts < 10 and correct == False:

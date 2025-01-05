@@ -8,7 +8,7 @@ class Player:
         self.hp = self.max_hp
 
     def pick_up(self, item):
-        print(f"You have found a {item}")
+        print(f"You have found a {item.name}")
         if item.__class__.__name__ != "Bag":
             self.bag.add(item)
         else:
