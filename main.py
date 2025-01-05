@@ -14,21 +14,24 @@ entity_mapper = {
     ".": "nothing"
 }
 
+marble = Item("marble")
 key = Item("key")
 bread = Food("bread", 100)
 
 olivia = Trivia_NPC("Olivia")
 fred = TicTacToe_NPC("Fred")
+vivian = HideAndSeek_NPC("Vivian")
+victor = HideAndSeek_NPC("Victor")
 john = Riddle_NPC("John")
 sasha = Hangman_NPC("Sasha")
-
-playground = Place("playground", [0,0], [key], [fred])
-sandbox = Place("sandbox", [0,0], [key], [john])
-garden = Place("garden", [10, 0], [key], [john, sasha])
 
 hand = Bag("hand", 1)
 basket = Bag("basket", 5)
 backpack = Bag("backpack", 10)
+
+playground = Place("playground", [0,0], [key], [olivia])
+sandbox = Place("sandbox", [0,0], [key], [john])
+garden = Place("garden", [10, 0], [basket, key], [fred, vivian])
 
 class Game():
     def __init__(self):
@@ -37,7 +40,7 @@ class Game():
 
     def start(self):
         #name = input("Enter player name: ")
-        self.player = Player("s", hand)
+        self.player = Player("name", hand)
         self.current_place = playground
         self.current_place.set_details()
 
@@ -98,7 +101,7 @@ class Game():
         elif entity_mapper[current_pos] == "friend":
             for i in self.current_place.npcs:
                 if i.pos == self.current_place.pos:
-                    i.interact(self.player, random.choice(self.current_place.items))
+                    i.interact(self.player)
         else:
            pass
 

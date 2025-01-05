@@ -15,11 +15,12 @@ class NPC:
     self.name = name
     self.difficulty = 1
     self.friendship = 0
+    self.item = ""
     self.met = False
     self.attempted = False
     self.completed = False
 
-  def interact(self, player, item):
+  def interact(self, player):
     if self.met == False:
       print("Hi! Who are you?")
       print(f"Your name is {player.name}? I'm {self.name}. Nice to meet you.")
@@ -33,7 +34,7 @@ class NPC:
 
     else:
       if self.attempted == False:
-        print(f"Guess what. I found this {item.name} lying around! I'll give you it if you play a game with me.")
+        print(f"Guess what. I found this {self.item.name} lying around! I'll give you it if you play a game with me.")
         questions = [
           {
             "type": "confirm",
@@ -58,8 +59,8 @@ class NPC:
         self.attempted = True
         if self.task():
           print("Congratulations, you won!")
-          print(f"As promised, here is the {item.name}")
-          player.pick_up(item)
+          print(f"As promised, here is the {self.item.name}")
+          player.pick_up(self.item)
           print("Thanks for playing with me!")
           self.friendship += 10
           print(f"{self.name} gained 10 friendship points.")
@@ -146,29 +147,91 @@ class TicTacToe_NPC(NPC):
             game_board[i][j] = symbol
             possible_moves.remove(move)
             break
-      
+
+      if game_board[0][0] == game_board[1][1] == game_board[2][2]:
+        return game_board[0][0]
+      elif game_board[0][2] == game_board[1][1] == game_board[2][0]:
+        return game_board[0][2]
+      for i in range(3):
+        if game_board[i][0] == game_board[i][1] == game_board[i][2]:
+          return game_board[i][0]
+        elif game_board[0][i] == game_board[1][i] == game_board[2][i]:
+          return game_board[0][i]
+      return False
 
     print("Each go you input the position you would like to place your tile. The positions are the spaces on the board labled 1-9.")
     print("The first to get three tiles in a row, column or diagonally wins.")
     print("I will use X tiles and you will use O tiles. You go first.")
-    while True:
+    run = True
+    while run:
       print_game_board()
-
-      run = True
-      while run:
-        move = input("")
-        if move.isdigit() == False or len(move) == 1:
-          print("That is not a valid move. Make sure that your input is a number 1-9.")
-        elif int(move) in possible_moves:
-          place_tile(move, "O")
+      inp = input("")
+      try:
+        inp = int(inp)
+      except ValueError:
+        print("Please enter an integer.")
+      else:
+        if inp in possible_moves:
+          if place_tile(inp, "O") == "O": return True
+          move = random.choice(possible_moves)
+          if place_tile(move, "X") == "X": return False
         else:
-          print("That place is already occupied.")
-      move = random.choice(possible_moves)
-      place_tile(move, "X")
+          print("That is not a valid move. Make sure that your input is a number 1-9 and the place is not already occupied.")
 
 class HideAndSeek_NPC(NPC):
-  def task(self, hidden_item):
-    print(f"I've hidden a {hidden_item.name} somewhere around here. Find it and bring it back to me.")
+  def interact(self, player, item):
+    marble = Item("marble")
+
+    if self.met == False:
+      print("Hi! Who are you?")
+      print(f"Your name is {player.name}? I'm {self.name}. Nice to meet you.")
+      self.met = True
+
+    else:
+      print(f"Hello {player.name}! It's me {self.name}")
+
+    if self.completed:
+      print("Sorry I don't have anything else on me right now. We'll play another time.")
+
+    else:
+      if self.attempted == False:
+        print(f"Guess what. I found this {item.name} lying around! I'll give you it if you play a game with me.")
+        questions = [
+          {
+            "type": "confirm",
+            "message": "Would you like to play?"
+          },
+        ]
+        answers = prompt(questions)
+        confirm = answers[0]
+
+      else:
+        questions = [
+          {
+            "type": "confirm",
+            "message": "Are you ready to try again?"
+          },
+        ]
+        answers = prompt(questions)
+        confirm = answers[0]   
+
+      if confirm:
+        print("Amazing!")
+        self.attempted = True
+        print(f"I've hidden a marble somewhere around here. Find it and bring it back to me.")
+        if marble in player.bag:
+          print("Congratulations, you won!")
+          print(f"As promised, here is the {item.name}")
+          player.pick_up(item)
+          print("Thanks for playing with me!")
+          self.friendship += 10
+          print(f"{self.name} gained 10 friendship points.")
+          self.completed = True
+          self.difficulty += 1
+        else:
+          print("Thats a shame. Come back when you want to have another go.")
+      else:
+        print("Thats fine. Come back if you change your mind.")
 
 class Riddle_NPC(NPC):
   def task(self):

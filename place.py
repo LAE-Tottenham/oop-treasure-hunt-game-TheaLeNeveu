@@ -24,7 +24,7 @@ maps = {
     "playground": [
         [".", ".", ".", "#", "#", "#", "#", "0", ".", ".", ".", "."],
         ["?", ".", ".", ".", ".", "#", "#", "#", "#", "#", ".", "."],
-        ["#", "#", "#", "#", ".", ".", ".", "#", "X", "#", ".", "."],
+        ["#", "#", "#", "#", ".", ".", ".", "#", ".", "#", ".", "."],
         [".", ".", ".", ".", ".", "#", "#", ".", ".", "#", ".", "."],
         [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."]
     ],
@@ -71,6 +71,9 @@ class Place:
                     self.npcs[count].pos = [j, i]
                     count += 1
 
+        for j in range(len(self.npcs)):
+            self.npcs[j].item = self.items[j]
+            self.items.remove(self.items[j])
 
         # self.weapons = ["sword", "bow and arrow", "spear", "shield", "axe"]
         # self.food = ["bread", "cheese", "fruit", "vegetable", "cake"]
