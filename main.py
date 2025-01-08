@@ -10,41 +10,68 @@ entity_mapper = {
     "#": "wall",
     "X": "chest",
     "?": "friend",
-    "!": "enemy",
     ".": "nothing"
 }
 
 marble = Item("marble")
+flower = Item("flower")
+sock = Item("sock")
+yoyo = Item("Yoyo")
 key = Item("key")
 bread = Food("bread", 100)
+fish = Food("fish", 30)
+
+hallway_to_olivia_lab = Door(True)
+hallway_to_fred_lab = Door(True)
+hallway_to_v_lab = Door(True)
+hallway_to_john_lab = Door(True)
+hallway_to_sasha_lab = Door(True)
+hallway_to_player_lab = Door(True)
+
+chest1 = Chest(key)
+chest2 = Chest(bread)
+chest3 = Chest(fish)
+chest4 = Chest(flower)
+chest5 = Chest(marble)
+chest6 = Chest(sock)
 
 olivia = Trivia_NPC("Olivia")
 fred = TicTacToe_NPC("Fred")
 vivian = HideAndSeek_NPC("Vivian")
 victor = HideAndSeek_NPC("Victor")
+vincent = HideAndSeek_NPC("Vincent")
+vivian.hidden_item = marble
+victor.hidden_item = flower
+vincent.hidden_item = sock
 john = Riddle_NPC("John")
-sasha = Hangman_NPC("Sasha")
+sasha = Hangman_NPC("Sasha"), hallway_to_player_lab
 
 hand = Bag("hand", 1)
 basket = Bag("basket", 5)
 backpack = Bag("backpack", 10)
 
-playground = Place("playground", [0,0], [key], [olivia])
-sandbox = Place("sandbox", [0,0], [key], [john])
-garden = Place("garden", [10, 0], [basket, key], [fred, vivian])
+hallway = Place("hallway", [2,0], [hallway_to_olivia_lab, hallway_to_fred_lab, hallway_to_v_lab, hallway_to_john_lab, hallway_to_sasha_lab], [], [], [])
+sandbox = Place("sandbox", [0,0], [], [key], [john], [])
+garden = Place("garden", [10, 0], [], [basket, key, marble], [fred, vivian, victor], [chest2, chest3, chest4])
+garden = Place("garden", [10, 0], [], [basket, key, marble], [fred, vivian, victor], [chest2, chest3, chest4])
 
 class Game():
     def __init__(self):
-        self.places = [playground, sandbox, garden]
-        self.current_place = self.places[0]
+        self.places = [hallway, sandbox, garden]
+        self.current_place = self.places[2]
 
     def start(self):
         #name = input("Enter player name: ")
         self.player = Player("name", hand)
-        self.current_place = playground
         self.current_place.set_details()
 
-        print("You can move using the keys w, a, s, d. You can intect with things by mving to the same position as it.")
+        print("You can move using the keys w, a, s, d.")
+        print("You can intect with things by moving to the same position as it. . = nothing, # = door, X = chest, ? = friend.")
+        #print("Hint: Make sure you search all the rooms carefully you cannot go back to any previous rooms so make sure you have everything you need before you leave.")
+
+        print(f"Hello! You must be {self.player.name}. We're so happy to have you working with us as a chemist.")
+        print("Your lab is the 3rd door to the left in the hallway.")
+        
 
     def print_map(self):
         for i in range(self.current_place.height):
@@ -86,17 +113,21 @@ class Game():
             return False
         
         elif entity_mapper[current_pos] == "door":
-            if self.current_place.door.enter(self.player):
-                for i in self.current_place.npcs:
-                    i.completed = False
-                    i.attempted = False
-                self.current_place = self.places[self.places.index(self.current_place)+1]
-                self.current_place.set_details()
-                print(f"You are now in {self.current_place.name}")
+            for i in self.current_place.chests:
+                if i.pos == self.current_place.pos:
+                    i.open(self.player)
+                    if self.current_place.door.enter(self.player):
+                        for i in self.current_place.npcs:
+                            i.completed = False
+                            i.attempted = False
+                        self.current_place = self.places[self.places.index(self.current_place)+1]
+                        self.current_place.set_details()
+                        print(f"You are now in {self.current_place.name}")
 
         elif entity_mapper[current_pos] == "chest":
-            item = random.choice(self.current_place.items)
-            self.player.pick_up(item)
+            for i in self.current_place.chests:
+                if i.pos == self.current_place.pos:
+                    i.open(self.player)
 
         elif entity_mapper[current_pos] == "friend":
             for i in self.current_place.npcs:
