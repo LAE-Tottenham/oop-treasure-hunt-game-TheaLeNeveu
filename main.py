@@ -44,21 +44,20 @@ vivian.hidden_item = marble
 victor.hidden_item = flower
 vincent.hidden_item = sock
 john = Riddle_NPC("John")
-sasha = Hangman_NPC("Sasha"), hallway_to_player_lab
+sasha = Hangman_NPC("Sasha")
 
 hand = Bag("hand", 1)
 basket = Bag("basket", 5)
 backpack = Bag("backpack", 10)
 
-hallway = Place("hallway", [2,0], [hallway_to_olivia_lab, hallway_to_fred_lab, hallway_to_v_lab, hallway_to_john_lab, hallway_to_sasha_lab], [], [], [])
-sandbox = Place("sandbox", [0,0], [], [key], [john], [])
-garden = Place("garden", [10, 0], [], [basket, key, marble], [fred, vivian, victor], [chest2, chest3, chest4])
-garden = Place("garden", [10, 0], [], [basket, key, marble], [fred, vivian, victor], [chest2, chest3, chest4])
+hallway = Place("hallway", [2,0], [], [hallway_to_olivia_lab, hallway_to_fred_lab, hallway_to_v_lab, hallway_to_john_lab, hallway_to_sasha_lab], [], [])
+sandbox = Place("sandbox", [0,0], [key], [], [john], [])
+garden = Place("garden", [10, 0], [basket, key, marble], [], [fred, vivian, victor], [chest2, chest3, chest4])
 
 class Game():
     def __init__(self):
         self.places = [hallway, sandbox, garden]
-        self.current_place = self.places[2]
+        self.current_place = self.places[0]
 
     def start(self):
         #name = input("Enter player name: ")

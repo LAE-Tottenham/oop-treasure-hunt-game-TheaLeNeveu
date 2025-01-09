@@ -95,7 +95,7 @@ class Place:
         self.height = len(self.map)
         self.width = len(self.map[0])
         self.items = items
-        self.doors = []
+        self.doors = doors
         self.npcs = npcs
         self.chests = chests
 
@@ -120,8 +120,9 @@ class Place:
                     count += 1
 
 class Door:
-    def __init__(self, locked):
+    def __init__(self, locked, places):
         self.locked = locked
+        self.places = places
 
     def enter(self, player):
         self.unlock(player)
