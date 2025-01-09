@@ -1,5 +1,6 @@
 from place import *
 from player import *
+from npc import *
 from item import *
 
 from InquirerPy import prompt
@@ -43,9 +44,9 @@ hand = Bag("hand", 1)
 basket = Bag("basket", 5)
 backpack = Bag("backpack", 10)
 
-hallway = Place("hallway", [2,0], [], [hallway_to_olivia_lab, hallway_to_fred_lab, hallway_to_v_lab, hallway_to_john_lab, hallway_to_sasha_lab], [], [])
-sandbox = Place("sandbox", [0,0], [key], [], [john], [])
-garden = Place("garden", [10, 0], [basket, key, marble], [], [fred, vivian, victor], [chest2, chest3, chest4])
+hallway = Place("hallway", [2,0], [], [], [])
+sandbox = Place("sandbox", [0,0], [key], [john], [])
+garden = Place("garden", [10, 0], [basket, key, marble], [fred, vivian, victor], [chest2, chest3, chest4])
 
 class Game():
     def __init__(self):
@@ -105,9 +106,9 @@ class Game():
             return False
         
         elif entity_mapper[current_pos] == "door":
-            for i in self.current_place.chests:
+            for i in self.current_place.doors:
                 if i.pos == self.current_place.pos:
-                    i.enter(self.player)
+                    if i.enter(self.player):
                     if self.current_place.door.enter(self.player):
                         self.current_place = self.places[self.places.index(self.current_place)+1]
                         self.current_place.set_details()

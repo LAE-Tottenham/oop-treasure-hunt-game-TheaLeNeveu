@@ -26,11 +26,11 @@ maps = {
         ["#",".",".",".","#"],
         ["#",".",".",".","#"],
         ["#",".",".",".","#"],
-        ["0",".",".",".","0"],
+        [".",".",".",".","."],
         ["#",".",".",".","#"],
-        ["0",".",".",".","0"],
+        [".",".",".",".","."],
         ["#",".",".",".","#"],
-        ["0",".",".",".","0"],
+        [".",".",".",".","0"],
         ["#","#","#","#","#"],
     ],
     "empty lab": [
@@ -88,14 +88,13 @@ maps = {
 }
     
 class Place:
-    def __init__(self, name, pos, items, doors, npcs, chests):
+    def __init__(self, name, pos, items, npcs, chests):
         self.name = name
         self.pos = pos
         self.map = maps[name]
         self.height = len(self.map)
         self.width = len(self.map[0])
         self.items = items
-        self.doors = doors
         self.npcs = npcs
         self.chests = chests
 
@@ -120,24 +119,3 @@ class Place:
                 if self.map[i][j] == "X":
                     self.chests[count].pos = [j, i]
                     count += 1
-
-class Door:
-    def __init__(self, locked, places):
-        self.locked = locked
-        self.places = places
-
-    def enter(self, player):
-        self.unlock(player)
-        if self.locked:
-            print("The door is locked. You need a key to unlock it.")
-            return False
-        else:
-            return True
-        
-    def unlock(self, player):
-        for i in player.bag.inventory:
-            if i.name == "key":
-                self.locked = False
-                player.bag.remove("key")
-                print("The door is now unlocked.")
-                break

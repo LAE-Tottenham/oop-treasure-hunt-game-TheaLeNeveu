@@ -1,3 +1,6 @@
+import random
+from InquirerPy import prompt
+
 class NPC:
   def __init__(self, name):
     self.name = name
@@ -14,11 +17,11 @@ class NPC:
     else:
       print(f"Hello {player.name}! It's me {self.name}")
 
-    if current_place.npc_status[self] == "complete":
+    if current_place.npc_status[self] == "completed":
       print("Sorry I don't have anything else on me right now. We'll play another time.")
 
     else:
-      if self.status == "atte":
+      if self.status == "attempted":
         print(f"Guess what. I found this {self.item.name} lying around! I'll give you it if you play a game with me.")
         questions = [
           {
@@ -28,7 +31,7 @@ class NPC:
         ]
         answers = prompt(questions)
         confirm = answers[0]
-
+        
       else:
         questions = [
           {
