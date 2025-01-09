@@ -21,13 +21,6 @@ key = Item("key")
 bread = Food("bread", 100)
 fish = Food("fish", 30)
 
-hallway_to_olivia_lab = Door(True)
-hallway_to_fred_lab = Door(True)
-hallway_to_v_lab = Door(True)
-hallway_to_john_lab = Door(True)
-hallway_to_sasha_lab = Door(True)
-hallway_to_player_lab = Door(True)
-
 chest1 = Chest(key)
 chest2 = Chest(bread)
 chest3 = Chest(fish)
@@ -114,11 +107,8 @@ class Game():
         elif entity_mapper[current_pos] == "door":
             for i in self.current_place.chests:
                 if i.pos == self.current_place.pos:
-                    i.open(self.player)
+                    i.enter(self.player)
                     if self.current_place.door.enter(self.player):
-                        for i in self.current_place.npcs:
-                            i.completed = False
-                            i.attempted = False
                         self.current_place = self.places[self.places.index(self.current_place)+1]
                         self.current_place.set_details()
                         print(f"You are now in {self.current_place.name}")

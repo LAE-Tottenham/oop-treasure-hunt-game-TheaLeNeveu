@@ -1,24 +1,24 @@
 class NPC:
   def __init__(self, name):
     self.name = name
+    self.met = False
     self.difficulty = 1
     self.friendship = 0
     self.item = ""
 
-  def interact(self, player):
-    if self.status == 0:
+  def interact(self, player, current_place):
+    if self.met == False:
       print("Hi! Who are you?")
       print(f"Your name is {player.name}? I'm {self.name}. Nice to meet you.")
       self.met = True
-
     else:
       print(f"Hello {player.name}! It's me {self.name}")
 
-    if self.completed:
+    if current_place.npc_status[self] == "complete":
       print("Sorry I don't have anything else on me right now. We'll play another time.")
 
     else:
-      if self.attempted == False:
+      if self.status == "atte":
         print(f"Guess what. I found this {self.item.name} lying around! I'll give you it if you play a game with me.")
         questions = [
           {
