@@ -2,24 +2,24 @@ from item import *
 
 import random
 
-def generate_map(height, width):
-    entity_index = {
-      0: "0",
-      1: "#",
-      2: "X",
-      3: "?",
-      4: ".",
-    }
-    map = []
-    for i in range(height):
-        temp = []
-        for j in range(width):
-          rand_int = random.randint(0, 10)
-          if rand_int > 4:
-              rand_int = 5
-          temp.append(entity_index[rand_int])
-        map.append(temp)
-    return map
+# def generate_map(height, width):
+#     entity_index = {
+#       0: "0",
+#       1: "#",
+#       2: "X",
+#       3: "?",
+#       4: ".",
+#     }
+#     map = []
+#     for i in range(height):
+#         temp = []
+#         for j in range(width):
+#           rand_int = random.randint(0, 10)
+#           if rand_int > 4:
+#               rand_int = 5
+#           temp.append(entity_index[rand_int])
+#         map.append(temp)
+#     return map
 
 maps = {
     "hallway": [
@@ -100,7 +100,9 @@ class Place:
         self.chests = chests
 
     def set_details(self):
-
+        self.npc_status = {}
+        for i in self.npcs:
+            self.npc_status[i] = 0
 
         count = 0
         for i in range(len(self.map)):

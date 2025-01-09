@@ -61,4 +61,3 @@ class Bag:
         print(f"There is nothing in {self.name}")
       for i in self.inventory:
         print(i.name)
-        
