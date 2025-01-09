@@ -1,6 +1,19 @@
 import random
 from InquirerPy import prompt
 
+class Person:
+  def __init__(self, name):
+    self.name = name
+    self.met = False
+
+  def interact(self, player, current_place):
+    if self.met == False:
+      print("Hi! Who are you?")
+      print(f"Your name is {player.name}? Oh, you must be the new guy! I'm {self.name}. Nice to meet you.")
+      self.met = True
+    else:
+      print(f"Hello {player.name}! It's me {self.name}")
+
 class NPC:
   def __init__(self, name):
     self.name = name
@@ -9,6 +22,9 @@ class NPC:
     self.friendship = 0
     self.item = ""
 
+  def greating():
+    pass
+
   def interact(self, player, current_place):
     if self.met == False:
       print("Hi! Who are you?")
@@ -16,10 +32,10 @@ class NPC:
       self.met = True
     else:
       print(f"Hello {player.name}! It's me {self.name}")
+    self.greating()
 
     if current_place.npc_status[self] == "completed":
       print("Sorry I don't have anything else on me right now. We'll play another time.")
-
     else:
       if self.status == "attempted":
         print(f"Guess what. I found this {self.item.name} lying around! I'll give you it if you play a game with me.")
@@ -60,6 +76,9 @@ class NPC:
         print("Thats fine. Come back if you change your mind.")
 
 class Trivia_NPC(NPC):
+  def greating():
+    print("Why are you bothering me?! You must think that I'm timid just because I'm a mouse. Get lost!")
+
   def task(self):
     questions = [
       [
@@ -111,6 +130,8 @@ class Trivia_NPC(NPC):
       return False
 
 class TicTacToe_NPC(NPC):
+  def greating():
+    print("Hoppity, hop, hop! Rabbits like me can't just jump high, we run fast too. That's why we may the best pro-athletes. My event is shotput!")
   def task(self):
     possible_moves = [1, 2, 3, 4, 5, 6, 7, 8, 9]
     game_board = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
@@ -162,14 +183,17 @@ class TicTacToe_NPC(NPC):
           print("That is not a valid move. Make sure that your input is a number 1-9 and the place is not already occupied.")
 
 class HideAndSeek_NPC(NPC):
+  def greating():
+    print("My siblings and I always get told we look the same but we don't! I suppose we're all magpies though and we all like to play hide and seek")
+  
   def interact(self, player):
     if self.met == False:
       print("Hi! Who are you?")
       print(f"Your name is {player.name}? I'm {self.name}. Nice to meet you.")
       self.met = True
-
     else:
       print(f"Hello {player.name}! It's me {self.name}")
+    self.greating()
 
     if self.completed:
       print("Sorry I don't have anything else on me right now. We'll play another time.")
@@ -193,6 +217,9 @@ class HideAndSeek_NPC(NPC):
         print(f"It doesn't look like you've found a {self.hidden_item.name} yet. Come back when you've got it'.")
 
 class Riddle_NPC(NPC):
+  def greating():
+    print("As an owl I am exceptionally wise and impeccably humble. A mere human such as yourself should bask in my presence.")
+
   def task(self):
     print("If you want to give up, type q.")
     riddles = [
@@ -215,6 +242,9 @@ class Riddle_NPC(NPC):
           print("That's not right.")
 
 class Hangman_NPC(NPC):
+   def greating():
+     print("I apoligise for taking up so much of your time. I know I'm a snail but people always tell me I'm slow. Maybe I should get myself a scooter so I could get around faster...")
+
    def task(self):
       drawings = {
         1: "========== \n",

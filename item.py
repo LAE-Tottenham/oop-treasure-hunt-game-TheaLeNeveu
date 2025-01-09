@@ -11,9 +11,8 @@ class Food(Item):
     self.energy = energy
 
 class Door:
-    def __init__(self, locked, places):
+    def __init__(self, locked):
         self.locked = locked
-        self.places = places
 
     def enter(self, player):
         self.unlock(player)
