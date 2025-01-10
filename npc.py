@@ -22,17 +22,14 @@ class NPC:
     self.friendship = 0
     self.item = ""
 
-  def greating():
-    pass
-
   def interact(self, player, current_place):
     if self.met == False:
       print("Hi! Who are you?")
       print(f"Your name is {player.name}? I'm {self.name}. Nice to meet you.")
       self.met = True
     else:
-      print(f"Hello {player.name}! It's me {self.name}")
-    self.greating()
+      print(f"Hello {player.name}! It's me {self.name} again.")
+      print(self.greating)
 
     if current_place.npc_status[self] == "completed":
       print("Sorry I don't have anything else on me right now. We'll play another time.")
@@ -192,7 +189,7 @@ class HideAndSeek_NPC(NPC):
       print(f"Your name is {player.name}? I'm {self.name}. Nice to meet you.")
       self.met = True
     else:
-      print(f"Hello {player.name}! It's me {self.name}")
+      print(f"Hello {player.name}! It's me {self.name} again.")
     self.greating()
 
     if self.completed:

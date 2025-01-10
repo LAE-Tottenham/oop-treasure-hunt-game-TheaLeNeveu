@@ -49,11 +49,12 @@ owl = Riddle_NPC("Owen")
 snail = Hangman_NPC("Sasha")
 
 hand = Bag("hand", 1)
+purse = Bag("purse", 2)
 basket = Bag("basket", 5)
 backpack = Bag("backpack", 10)
 
 hallway = Place("hallway", [0,0], [], [], [], False)
-lab = Place("lab", [0,0], [], [], [], False)
+lab = Place("lab", [0,0], [key], [snail], [Chest(purse)], False)
 sandbox = Place("sandbox", [0,0], [key], [owl], [], True)
 garden = Place("garden", [10, 0], [basket, key, marble], [rabbit, magpie1, magpie2], [chest2, chest3, chest4], True)
 
