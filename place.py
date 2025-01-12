@@ -102,7 +102,7 @@ class Place:
     def set_details(self):
         self.npc_status = {}
         for i in self.npcs:
-            self.npc_status[i] = ""
+            self.npc_status[i] = "not attempted"
 
         count = 0
         for i in range(len(self.map)):

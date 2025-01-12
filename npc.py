@@ -1,18 +1,18 @@
 import random
 from InquirerPy import prompt
 
-class Person:
-  def __init__(self, name):
-    self.name = name
-    self.met = False
+# class Person:
+#   def __init__(self, name):
+#     self.name = name
+#     self.met = False
 
-  def interact(self, player, current_place):
-    if self.met == False:
-      print("Hi! Who are you?")
-      print(f"Your name is {player.name}? Oh, you must be the new guy! I'm {self.name}. Nice to meet you.")
-      self.met = True
-    else:
-      print(f"Hello {player.name}! It's me {self.name}")
+#   def interact(self, player, current_place):
+#     if self.met == False:
+#       print("Hi! Who are you?")
+#       print(f"Your name is {player.name}? Oh, you must be the new guy! I'm {self.name}. Nice to meet you.")
+#       self.met = True
+#     else:
+#       print(f"Hello {player.name}! It's me {self.name}")
 
 class NPC:
   def __init__(self, name):
@@ -22,20 +22,21 @@ class NPC:
     self.friendship = 0
     self.item = ""
 
+class Trivia_NPC(NPC):
   def interact(self, player, current_place):
     if self.met == False:
       print("Hi! Who are you?")
-      print(f"Your name is {player.name}? I'm {self.name}. Nice to meet you.")
+      print(f"Your name is {player.name}? My name is {self.name}...")
       self.met = True
     else:
-      print(f"Hello {player.name}! It's me {self.name} again.")
-      print(self.greating)
+      print(f"Hello {player.name}! It's me {self.name} again!")
+    print("I apoligise for taking up so much of your time. I'm not a very fast talker. I'm a snail after all.")
 
     if current_place.npc_status[self] == "completed":
-      print("Sorry I don't have anything else on me right now. We'll play another time.")
+      print("Sorry, I'm a bit tired from our last game. Let's play another time.")
     else:
-      if self.status == "attempted":
-        print(f"Guess what. I found this {self.item.name} lying around! I'll give you it if you play a game with me.")
+      if current_place.npc_status[self] == "not attempted":
+        print(f"I found this {self.item.name} lying on the ground. I'll give it to you if you get all my questions right.")
         questions = [
           {
             "type": "confirm",
@@ -44,8 +45,8 @@ class NPC:
         ]
         answers = prompt(questions)
         confirm = answers[0]
-        
       else:
+        print(f"I still have this {self.item.name}.")
         questions = [
           {
             "type": "confirm",
@@ -59,22 +60,18 @@ class NPC:
         print("Amazing!")
         self.attempted = True
         if self.task():
-          print("Congratulations, you won!")
-          print(f"As promised, here is the {self.item.name}")
+          print("You won! Congratulations.")
+          print(f"Here is your {self.item.name}.")
           player.pick_up(self.item)
-          print("Thanks for playing with me!")
+          print("Thanks for taking the time to play with me.")
           self.friendship += 10
           print(f"{self.name} gained 10 friendship points.")
           self.completed = True
           self.difficulty += 1
         else:
-          print("Thats a shame. Come back when you want to have another go.")
+          print(f"I am happy to have won but that means that I will keep the {self.item.name} for now. Come back when you want to have another go.")
       else:
-        print("Thats fine. Come back if you change your mind.")
-
-class Trivia_NPC(NPC):
-  def greating():
-    print("Why are you bothering me?! You must think that I'm timid just because I'm a mouse. Get lost!")
+        print("People always tell be I loose because I am slow, which is quite unsuprising considering I am a snail. Maybe I should get myself a scooter so I could get around faster...")
 
   def task(self):
     questions = [
@@ -127,8 +124,57 @@ class Trivia_NPC(NPC):
       return False
 
 class TicTacToe_NPC(NPC):
-  def greating():
-    print("Hoppity, hop, hop! Rabbits like me can't just jump high, we run fast too. That's why we may the best pro-athletes. My event is shotput!")
+  def interact(self, player, current_place):
+    if self.met == False:
+      print("Hi! Who are you?")
+      print(f"Your name is {player.name}? Okay, it's not like I care or anything. My name's {self.name}. Now leave me alone!")
+      self.met = True
+    else:
+      print(f"Hi {player.name}. It's me {self.name} again.")
+    print("Why are you bothering me?! You must think that I'm timid just because I'm a mouse. Get lost!")
+
+    if current_place.npc_status[self] == "completed":
+      print("I don't have anything else on me so get lost!")
+    else:
+      if current_place.npc_status[self] == "not attempted":
+        print("But while you're here...")
+        print(f"I found this {self.item.name} hiding in the grass. Maybe I'll think about giving it to you if you play a game with me.")
+        questions = [
+          {
+            "type": "confirm",
+            "message": "Would you like to play?"
+          },
+        ]
+        answers = prompt(questions)
+        confirm = answers[0]
+      else:
+        print(f"I still have this {self.item.name}.")
+        questions = [
+          {
+            "type": "confirm",
+            "message": "Are you ready to try again?"
+          },
+        ]
+        answers = prompt(questions)
+        confirm = answers[0]   
+
+      if confirm:
+        print("Amazing!")
+        self.attempted = True
+        if self.task():
+          print("You won. Don't let it get to your head.")
+          print(f"Anyway, here is the {self.item.name}.")
+          player.pick_up(self.item)
+          print("Thanks for playing with me or whatever...")
+          self.friendship += 10
+          print(f"{self.name} gained 10 friendship points.")
+          self.completed = True
+          self.difficulty += 1
+        else:
+          print("I knew you wouldn't be able to beat me. Come back when you want to have another go.")
+      else:
+        print("You wouldn't be able to beat me anyway.")
+  
   def task(self):
     possible_moves = [1, 2, 3, 4, 5, 6, 7, 8, 9]
     game_board = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
@@ -180,9 +226,6 @@ class TicTacToe_NPC(NPC):
           print("That is not a valid move. Make sure that your input is a number 1-9 and the place is not already occupied.")
 
 class HideAndSeek_NPC(NPC):
-  def greating():
-    print("My siblings and I always get told we look the same but we don't! I suppose we're all magpies though and we all like to play hide and seek")
-  
   def interact(self, player):
     if self.met == False:
       print("Hi! Who are you?")
@@ -190,14 +233,14 @@ class HideAndSeek_NPC(NPC):
       self.met = True
     else:
       print(f"Hello {player.name}! It's me {self.name} again.")
-    self.greating()
+    print("My siblings and I always get told we look the same but we don't! I suppose we're all magpies though and we all like to play hide and seek")
 
     if self.completed:
       print("Sorry I don't have anything else on me right now. We'll play another time.")
 
     else:
       if self.attempted == False:
-        print(f"Guess what. I found this {self.item.name} lying around! I'll give you it if you play a game with me.")
+        print(f"Guess what. I found this {self.item.name} lying around. It's so shiny! I'll give you it if you play a game with me.")
         self.attempted = True
         print(f"I've hidden a {self.hidden_item.name} somewhere around here. Find it and bring it back to me.")
       
@@ -214,8 +257,56 @@ class HideAndSeek_NPC(NPC):
         print(f"It doesn't look like you've found a {self.hidden_item.name} yet. Come back when you've got it'.")
 
 class Riddle_NPC(NPC):
-  def greating():
+  def interact(self, player, current_place):
+    if self.met == False:
+      print("Hi! Who are you?")
+      print(f"Your name is {player.name}? You may address me as the great and powerful {self.name}.")
+      self.met = True
+    else:
+      print(f"Greetings {player.name}. You once more find yourself in the company of the great and powerful {self.name}.")
     print("As an owl I am exceptionally wise and impeccably humble. A mere human such as yourself should bask in my presence.")
+
+    if current_place.npc_status[self] == "completed":
+      print("I don't have anything else on me so get lost!")
+    else:
+      if current_place.npc_status[self] == "not attempted":
+        print("But while you're here...")
+        print(f"I found this {self.item.name} hiding in the grass. Maybe I'll think about giving it to you if you play a game with me.")
+        questions = [
+          {
+            "type": "confirm",
+            "message": "Would you like to play?"
+          },
+        ]
+        answers = prompt(questions)
+        confirm = answers[0]
+      else:
+        print(f"I still have this {self.item.name}.")
+        questions = [
+          {
+            "type": "confirm",
+            "message": "Are you ready to try again?"
+          },
+        ]
+        answers = prompt(questions)
+        confirm = answers[0]   
+
+      if confirm:
+        print("Amazing!")
+        self.attempted = True
+        if self.task():
+          print("You won. Don't let it get to your head.")
+          print(f"Anyway, here is the {self.item.name}.")
+          player.pick_up(self.item)
+          print("Thanks for playing with me or whatever...")
+          self.friendship += 10
+          print(f"{self.name} gained 10 friendship points.")
+          self.completed = True
+          self.difficulty += 1
+        else:
+          print("I knew you wouldn't be able to beat me. Come back when you want to have another go.")
+      else:
+        print("You wouldn't be able to beat me anyway.")
 
   def task(self):
     print("If you want to give up, type q.")
@@ -239,10 +330,58 @@ class Riddle_NPC(NPC):
           print("That's not right.")
 
 class Hangman_NPC(NPC):
-   def greating():
-     print("I apoligise for taking up so much of your time. I know I'm a snail but people always tell me I'm slow. Maybe I should get myself a scooter so I could get around faster...")
+  def interact(self, player, current_place):
+    if self.met == False:
+      print("Hi! Who are you?")
+      print(f"Your name is {player.name}? My name's {self.name}. Remember it. I might be a famous athelete in the future.")
+      self.met = True
+    else:
+      print(f"Hello {player.name}! It's me {self.name} again!")
+      print("Hoppity, hop, hop! Rabbits like me can't just jump high, we run fast too. That's why we may the best pro-athletes. My event is shotput!")
 
-   def task(self):
+    if current_place.npc_status[self] == "completed":
+      print("Sorry, I need to rest so I can be in tip top shape for our next game! I'll be sure to beat you next time.")
+    else:
+      if current_place.npc_status[self] == "not attempted":
+        print("But while you're here...")
+        print(f"I found this {self.item.name} on one of my burrows. A prize is great reason to have a competition!")
+        questions = [
+          {
+            "type": "confirm",
+            "message": "Would you like to play?"
+          },
+        ]
+        answers = prompt(questions)
+        confirm = answers[0]
+      else:
+        print(f"I still have this {self.item.name}.")
+        questions = [
+          {
+            "type": "confirm",
+            "message": "Are you ready to try again?"
+          },
+        ]
+        answers = prompt(questions)
+        confirm = answers[0]   
+
+      if confirm:
+        print("Amazing!")
+        self.attempted = True
+        if self.task():
+          print("You won. It's great to play against people that are better than you. I can feel myself improving already!")
+          print(f"Here is the {self.item.name} as promised.")
+          player.pick_up(self.item)
+          print("Thanks for playing with me!")
+          self.friendship += 10
+          print(f"{self.name} gained 10 friendship points.")
+          self.completed = True
+          self.difficulty += 1
+        else:
+          print("Don't feel bad about not being able to beat me. It's not easy to beat a pro-athlete such as myself. Come back when you want to have another go.")
+      else:
+        print("That's such a shame. Excersising your brain is just as important as excersising your muscles.")
+
+  def task(self):
       drawings = {
         1: "========== \n",
         2: """
@@ -378,12 +517,11 @@ class Hangman_NPC(NPC):
           if guess in word:
             print("Good job!")
             guesses.append(guess)
-            
           elif guess not in word:
             print("That's not right.")
             attempts += 1
-            print(drawings[attempts])
             print("You have " + str(10 - attempts) + " lives left.")
+          print(drawings[attempts])
 
       if correct == True:
         return True

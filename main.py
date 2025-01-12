@@ -37,8 +37,8 @@ chest6 = Chest(sock)
 # human_owl = Person("Owen")
 # human_snail = Person("Sasha")
 
-mouse = Trivia_NPC("Molly")
-rabbit = TicTacToe_NPC("Roger")
+snail = Trivia_NPC("Sasha")
+mouse = TicTacToe_NPC("Molly")
 magpie1 = HideAndSeek_NPC("Maggie")
 magpie1.hidden_item = marble
 magpie2 = HideAndSeek_NPC("Mabel")
@@ -46,7 +46,7 @@ magpie2.hidden_item = flower
 magpie3 = HideAndSeek_NPC("Miles")
 magpie3.hidden_item = sock
 owl = Riddle_NPC("Owen")
-snail = Hangman_NPC("Sasha")
+rabbit = Hangman_NPC("Roger")
 
 hand = Bag("hand", 1)
 purse = Bag("purse", 2)
@@ -65,7 +65,7 @@ class Game():
 
     def start(self):
         print("You can move using the keys w, a, s, d. You can check your inventory with v. If you want to quit you can press q.")
-        print("You can intect with things by moving to the same position as it. (. = nothing, # = door, X = chest, ? = friend)")
+        print("You can interact with things by moving to the same position as it. (. = nothing, # = wall, door = 0, X = chest, ? = friend)")
         print("Hint: Make sure you search all the rooms carefully you cannot go back to any previous rooms so make sure you have everything you need before you leave.")
 
         for i in range(3):
@@ -85,12 +85,7 @@ class Game():
         print(f"{self.player.name}? That was the name on the door of this office. You're head chemist {self.player.name}! I wonder why you go by your last name...")
         print("Anyway, my name's sasha. Nice to meet you!")
         print("I'm going to be off now. See you later!")
-        snail.met = True
-
-        # print(f"Hello! You must be {self.player.name}. We're so happy to have you working with us as a chemist.")
-        # print("Your lab is the 3rd door to the left in the hallway.")
-        # print("You are now in the hallway")
-        
+        snail.met = True      
 
     def print_map(self):
         for i in range(self.current_place.height):
