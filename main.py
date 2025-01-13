@@ -22,21 +22,6 @@ key = Item("key")
 bread = Food("bread", 100)
 fish = Food("fish", 30)
 
-chest1 = Chest(key)
-chest2 = Chest(bread)
-chest3 = Chest(fish)
-chest4 = Chest(flower)
-chest5 = Chest(marble)
-chest6 = Chest(sock)
-
-# human_mouse = Person("Molly")
-# human_rabbit = Person("Roger")
-# human_magpie1 = Person("Maggie")
-# human_magpie2 = Person("Mabel")
-# human_magpie3 = Person("Miles")
-# human_owl = Person("Owen")
-# human_snail = Person("Sasha")
-
 snail = Trivia_NPC("Sasha")
 mouse = TicTacToe_NPC("Molly")
 magpie1 = HideAndSeek_NPC("Maggie")
@@ -54,13 +39,14 @@ basket = Bag("basket", 5)
 backpack = Bag("backpack", 10)
 
 hallway = Place("hallway", [0,0], [], [], [], False)
-lab = Place("lab", [0,0], [key], [snail], [Chest(purse)], False)
-sandbox = Place("sandbox", [0,0], [key], [owl], [], True)
-garden = Place("garden", [10, 0], [basket, key, marble], [rabbit, magpie1, magpie2], [chest2, chest3, chest4], True)
+lab_1 = Place("lab_1", [0,0], [key], [snail], [Chest(purse)], True)
+offices = Place("offices", [0,0], [key], [owl], [], True)
+lab_2 = Place("lab_2", [10, 0], [basket, key, marble], [rabbit, magpie1, magpie2], [Chest(bread), Chest(fish), Chest(flower)], True)
+cafeteria = Place("cafeteria", [11.10], [marble, sock, key], [magpie3, mouse, snail], [Chest(yoyo), Chest(flower), Chest(bread)], True)
 
 class Game():
     def __init__(self):
-        self.places = [lab, hallway, sandbox, garden]
+        self.places = [hallway, lab_1, offices, lab_2, cafeteria]
         self.current_place = self.places[0]
 
     def start(self):

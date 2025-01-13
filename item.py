@@ -15,20 +15,18 @@ class Door:
         self.locked = locked
 
     def enter(self, player):
-        self.unlock(player)
         if self.locked:
             print("The door is locked. You need a key to unlock it.")
+            self.unlock(player)
             return False
         else:
             return True
         
     def unlock(self, player):
-        for i in player.bag.inventory:
-            if i.name == "key":
-                self.locked = False
-                player.bag.remove("key")
-                print("The door is now unlocked.")
-                break
+      if player.bag.find_item("key"):
+        self.locked = False
+        player.bag.remove("key")
+        print("The door is now unlocked.")
 
 class Chest:
   def __init__(self, item):

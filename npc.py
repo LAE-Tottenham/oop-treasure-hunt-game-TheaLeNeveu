@@ -61,6 +61,7 @@ class Trivia_NPC(NPC):
         self.attempted = True
         if self.task():
           print("You won! Congratulations.")
+          print("People always tell me I loose because I am slow, which is quite unsuprising considering I am a snail. Maybe I should get myself a scooter so I could get around faster...")
           print(f"Here is your {self.item.name}.")
           player.pick_up(self.item)
           print("Thanks for taking the time to play with me.")
@@ -71,7 +72,7 @@ class Trivia_NPC(NPC):
         else:
           print(f"I am happy to have won but that means that I will keep the {self.item.name} for now. Come back when you want to have another go.")
       else:
-        print("People always tell be I loose because I am slow, which is quite unsuprising considering I am a snail. Maybe I should get myself a scooter so I could get around faster...")
+        print("That's a shame...")
 
   def task(self):
     questions = [
@@ -271,7 +272,7 @@ class Riddle_NPC(NPC):
     else:
       if current_place.npc_status[self] == "not attempted":
         print("But while you're here...")
-        print(f"I found this {self.item.name} hiding in the grass. Maybe I'll think about giving it to you if you play a game with me.")
+        print(f"I found this {self.item.name} up in the trees. If you entertain me be solving my riddles I shall give it to you.")
         questions = [
           {
             "type": "confirm",
@@ -295,8 +296,8 @@ class Riddle_NPC(NPC):
         print("Amazing!")
         self.attempted = True
         if self.task():
-          print("You won. Don't let it get to your head.")
-          print(f"Anyway, here is the {self.item.name}.")
+          print("Suprisingly, you passed.")
+          print(f"You are luckly that the benevolant {self.name} is willing to bestow upon you this gift.")
           player.pick_up(self.item)
           print("Thanks for playing with me or whatever...")
           self.friendship += 10
@@ -304,9 +305,9 @@ class Riddle_NPC(NPC):
           self.completed = True
           self.difficulty += 1
         else:
-          print("I knew you wouldn't be able to beat me. Come back when you want to have another go.")
+          print("It was inevitable that a lowly human such as yourself would be able to surpass riddles provided by the one and only {self.name}.")
       else:
-        print("You wouldn't be able to beat me anyway.")
+        print(f"How dare you refuse the mighty {self.name}!")
 
   def task(self):
     print("If you want to give up, type q.")

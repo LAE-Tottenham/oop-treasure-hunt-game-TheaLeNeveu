@@ -45,9 +45,14 @@ class Bag:
         print(f"{self.name} is full")
 
     def remove(self, item):
-       for i in self.inventory:
-          if i.name == item:
-             self.inventory.remove(i)
+      if self.find_item(item):
+        self.inventory.remove(item)
+
+    def find_item(self, item):
+      for i in self.inventory:
+        if i.name == item:
+           return True
+      return False
 
     def check_full(self):
       if len(self.inventory) == self.max_capacity:
@@ -59,5 +64,6 @@ class Bag:
     def view_inventory(self):
       if len(self.inventory) == 0:
         print(f"There is nothing in {self.name}")
-      for i in self.inventory:
-        print(i.name)
+      else:
+        for i in self.inventory:
+          print(i.name)
