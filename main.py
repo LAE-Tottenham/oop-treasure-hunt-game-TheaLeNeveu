@@ -47,7 +47,7 @@ cafeteria = Place("cafeteria", [11.10], [marble, sock, key], [magpie3, mouse, sn
 class Game():
     def __init__(self):
         self.places = [hallway, lab_1, offices, lab_2, cafeteria]
-        self.current_place = self.places[0]
+        self.current_place = self.places[1]
 
     def start(self):
         print("You can move using the keys w, a, s, d. You can check your inventory with v. If you want to quit you can press q.")

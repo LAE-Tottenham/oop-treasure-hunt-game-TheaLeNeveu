@@ -18,9 +18,12 @@ class Door:
         if self.locked:
             print("The door is locked. You need a key to unlock it.")
             self.unlock(player)
-            return False
+            if self.locked:
+              return False
+            else:
+              return True
         else:
-            return True
+          return True
         
     def unlock(self, player):
       if player.bag.find_item("key"):

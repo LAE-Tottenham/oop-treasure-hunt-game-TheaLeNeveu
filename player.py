@@ -46,7 +46,9 @@ class Bag:
 
     def remove(self, item):
       if self.find_item(item):
-        self.inventory.remove(item)
+        for i in self.inventory:
+          if i.name == item:
+            self.inventory.remove(i)
 
     def find_item(self, item):
       for i in self.inventory:
